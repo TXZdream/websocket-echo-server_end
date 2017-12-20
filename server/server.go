@@ -14,6 +14,8 @@ var upgrader = websocket.Upgrader{}
 func GetServer() *negroni.Negroni{
 	r := mux.NewRouter()
 	r.HandleFunc("/", IndexHandler)
+	var static string = "static"
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
 
 	s := negroni.Classic()
 	s.UseHandler(r)

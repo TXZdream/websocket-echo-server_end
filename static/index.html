@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="xterm.css" />
+    <script src="xterm.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="terminal-container"></div>
+    </div>
+    <script>
+      var term = new Terminal(),
+          protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://',
+          socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '') + "/";
+          sock = new WebSocket(socketURL);
+      sock.addEventListener('open', function () {
+        alert(123)
+      });
+      term.open(document.getElementById('terminal-container'));
+    </script>
+  </body>
+</html>
