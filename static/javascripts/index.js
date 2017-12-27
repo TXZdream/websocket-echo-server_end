@@ -33,17 +33,22 @@ $(function () {
             var printable = (
                 !ev.altKey && !ev.altGraphKey && !ev.ctrlKey && !ev.metaKey
             );
+            
+            ws.onopen = function () {
+                console.log("success");
+            }
+            ws.onerror = function () {  
+               console.log("error");  
+            };
 
             if (ev.keyCode == 13) {
                 term.prompt();
-                ws.onopen = function () {
-                    ws.send(str);
-                    input_state = false;
-                }
+                
+                input_state = false;
+                ws.send(str);
                 ws.onmessage = function (ev) {
                     term.write(ev.data);
-                }
-                ws.close = function () {
+                    term.prompt();
                     str = "";
                     input_state = true;
                 }
@@ -68,6 +73,9 @@ $(function () {
             }
             term.write(data);
         });
+    }
+    ws.close = function () {
+        console.log("close");
     }
     runFakeTerminal();
 });
