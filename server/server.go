@@ -34,12 +34,23 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		mType, b, err := ws.ReadMessage()
 		if err != nil {
+			if websocket.IsCloseError(err, websocket.CloseGoingAway) {
+				fmt.Fprintln(os.Stderr, "Remote user closed the connection")
+				ws.Close()
+				break
+			}
 			fmt.Println(err)
 			fmt.Fprintln(os.Stderr, "Can not read message.")
 			os.Exit(1)
 		}
+		fmt.Println(string(b))
 		err = ws.WriteMessage(mType, b)
 		if err != nil {
+			if websocket.IsCloseError(err, websocket.CloseGoingAway) {
+				fmt.Fprintln(os.Stderr, "Remote user closed the connection")
+				ws.Close()
+				break
+			}
 			fmt.Fprintln(os.Stderr, "Can not write message")
 			os.Exit(1)
 		}
