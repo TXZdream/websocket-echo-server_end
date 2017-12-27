@@ -1,0 +1,110 @@
+html, body{
+    height: 100%;
+    width: 100%;
+}
+
+html, body, #label, #views,
+#project, #editor, #command_line{
+    margin: 0;
+    padding: 0;
+}
+#label{
+    position: relative;
+    height: 35px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+h1{
+    position: absolute;
+    margin: 0;
+    padding: 5px 10px 3px 10px;
+    font-size: 20px;
+    color: #009A61;
+    box-sizing: border-box;
+    display: inline-block;
+}
+#signin, #register{
+    margin: 5px 0 3px 0;
+    position: absolute;
+    width: 40px;
+    font-size: 18px;
+    color: #009A61;
+
+    display: inline-block;
+}
+#signin{
+    right: 60px;
+}
+#register{
+    right: 10px;
+}
+.func_button{
+    background: rgba(17, 17, 17, 0.4);
+    color: #009A61;
+    margin: 5px;
+    padding: 1px;
+    font-size: 14px;
+    border: solid #009A61 1px;
+    border-radius: 5px;
+    width: 70px;
+    text-align: center;
+}
+
+#views{
+    position: relative;
+    width: 100%;
+    height: calc(100% - 35px);
+}
+#project{
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 10%;
+    background: rgba(27, 27, 27, 0.96);
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: inline-block;
+}
+#editor{
+    position: absolute;
+    left: 10%;
+    position: relative;
+    height: 100%;
+    width: 55%;
+    background: #141414;
+    box-sizing: border-box;
+    display: inline-block;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#command_line{
+    position: absolute;
+    left: 65%;
+    height: 100%;
+    width: 35%;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+#command_hint{
+    width: 100%;
+    height: calc(100% - 432px);
+    background:rgba(27, 27, 27, 0.96);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+li{
+    color: #009A61;
+    margin-left: 10px;
+    font-size: 14px;
+}
+.my_terminal{
+    width: 100%;
+    height: 432px;
+    box-sizing: border-box;
+    overflow: hidden;
+}

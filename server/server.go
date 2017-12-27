@@ -1,21 +1,22 @@
 package server
 
 import (
-	"os"
 	"fmt"
 	"net/http"
+	"os"
+
 	"github.com/gorilla/mux"
-	"github.com/urfave/negroni"
 	"github.com/gorilla/websocket"
+	"github.com/urfave/negroni"
 )
 
 var upgrader = websocket.Upgrader{}
 
-func GetServer() *negroni.Negroni{
+func GetServer() *negroni.Negroni {
 	r := mux.NewRouter()
-	r.HandleFunc("/", IndexHandler)
+	r.HandleFunc("/echo", IndexHandler)
 	var static string = "static"
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(static))))
+	r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir(static))))
 
 	s := negroni.Classic()
 	s.UseHandler(r)
@@ -33,6 +34,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	for {
 		mType, b, err := ws.ReadMessage()
 		if err != nil {
+			fmt.Println(err)
 			fmt.Fprintln(os.Stderr, "Can not read message.")
 			os.Exit(1)
 		}

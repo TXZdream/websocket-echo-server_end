@@ -1,22 +1,38 @@
 <!doctype html>
 <html>
-  <head>
-    <link rel="stylesheet" href="xterm.css" />
-    <script src="xterm.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <div id="terminal-container"></div>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../public/xterm/dist/xterm.css" />
+    <link rel="stylesheet" href="../public/css/index.css">
+    <script type="text/javascript" src="../public/xterm/dist/xterm.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="../public/javascripts/index.js"></script>
+</head>
+<body>
+<div id="label">
+    <h1>在线编辑器</h1>
+    <p id="signin">登陆</p>
+    <p id="register">注册</p>
+</div>
+
+<div id="views">
+    <div id="project">
+        <p class="func_button">文件视图</p>
     </div>
-    <script>
-      var term = new Terminal(),
-          protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://',
-          socketURL = protocol + location.hostname + ((location.port) ? (':' + location.port) : '') + "/";
-          sock = new WebSocket(socketURL);
-      sock.addEventListener('open', function () {
-        alert(123)
-      });
-      term.open(document.getElementById('terminal-container'));
-    </script>
-  </body>
+
+    <div id="editor">
+        <p class="func_button">保存</p>
+        <div id="edit-area"></div>
+    </div>
+    <div id="command_line">
+        <div id="command_hint">
+            <p class="func_button">常用命令</p>
+            <li>ls</li>
+            <li>cd</li>
+            <li>rm</li>
+        </div>
+        <div class="my_terminal" id="terminal"></div>
+    </div>
+</div>
+</body>
 </html>
