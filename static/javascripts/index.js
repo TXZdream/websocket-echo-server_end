@@ -8,7 +8,7 @@ $(function () {
 
     var ws = new WebSocket("ws://localhost:8080/echo");
 
-    function runFakeTerminal(term, ws) {
+    function runFakeTerminal() {
         var str = "";
         var input_state = true;
 
@@ -69,5 +69,5 @@ $(function () {
             term.write(data);
         });
     }
-    
+    runFakeTerminal();
 });
