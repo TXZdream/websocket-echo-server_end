@@ -1,17 +1,18 @@
 package server
 
 import (
-	"os"
 	"fmt"
 	"net/http"
+	"os"
+
 	"github.com/gorilla/mux"
-	"github.com/urfave/negroni"
 	"github.com/gorilla/websocket"
+	"github.com/urfave/negroni"
 )
 
 var upgrader = websocket.Upgrader{}
 
-func GetServer() *negroni.Negroni{
+func GetServer() *negroni.Negroni {
 	r := mux.NewRouter()
 	r.HandleFunc("/", IndexHandler)
 	var static string = "static"
