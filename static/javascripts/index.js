@@ -76,7 +76,7 @@ $(function () {
     }
     
     function closeWebSocket() {  
-        ws.websocket.close();  
+        ws.close();
     }
     window.onbeforeunload = function () {  
            closeWebSocket();  
