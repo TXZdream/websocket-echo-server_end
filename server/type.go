@@ -2,8 +2,9 @@ package server
 
 // Command is the JSON format between web server and docker server
 type Command struct {
-	Operation   string `json:"operation"`
-	Username    string `json:"username"`
-	ProjectName string `json:"projectname"`
-	Mainfile    string `json:"mainfile"`
+	Command    string   `json:"command"`
+	Entrypoint []string `json:"entrypoint"`
+	PWD        string   `json:"pwd"`
+	ENV        []string `json:"env"`
+	UserName   string   `json:"user"`
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// IndexHandler handle the index(/) page
+// IndexHandler handle the index(/) uri with websocket
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -31,16 +31,20 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		msg := string(b)
-		HandleMessage(msg)
-		err = ws.WriteMessage(mType, b)
-		if err != nil {
-			if websocket.IsCloseError(err, websocket.CloseGoingAway) {
-				fmt.Fprintln(os.Stderr, "Remote user closed the connection")
-				ws.Close()
-				break
-			}
-			fmt.Fprintln(os.Stderr, "Can not write message")
-			os.Exit(1)
+		msgChannel := make(chan []byte, 10)
+		go HandleMessage(msg, msgChannel)
+		for msg := range msgChannel {
+			ws.WriteMessage(mType, msg)
 		}
+		// err = ws.WriteMessage(mType, b)
+		// if err != nil {
+		// 	if websocket.IsCloseError(err, websocket.CloseGoingAway) {
+		// 		fmt.Fprintln(os.Stderr, "Remote user closed the connection")
+		// 		ws.Close()
+		// 		break
+		// 	}
+		// 	fmt.Fprintln(os.Stderr, "Can not write message")
+		// 	os.Exit(1)
+		// }
 	}
 }
