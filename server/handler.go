@@ -11,40 +11,58 @@ import (
 // IndexHandler handle the index(/) uri with websocket
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgrader.Upgrade(w, r, nil)
+	// Set TextMessage as default
+	msgType := websocket.TextMessage
+	clientMsg := make(chan []byte)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Can not upgrade to websocket")
 		os.Exit(1)
 	}
 	defer ws.Close()
 
-	for {
-		mType, b, err := ws.ReadMessage()
-		if err != nil {
-			if websocket.IsCloseError(err, websocket.CloseGoingAway) {
-				fmt.Fprintln(os.Stderr, "Remote user closed the connection")
-				ws.Close()
-				break
+	// Open a goroutine to receive message from client connection
+	go func(clientChan chan<- []byte, conn *websocket.Conn) {
+		for {
+			_, b, err := ws.ReadMessage()
+			if err != nil {
+				if websocket.IsCloseError(err, websocket.CloseGoingAway) {
+					fmt.Fprintln(os.Stderr, "Remote user closed the connection")
+					ws.Close()
+					close(clientChan)
+					break
+				}
+				close(clientChan)
+				fmt.Println(err)
+				fmt.Fprintln(os.Stderr, "Can not read message.")
+				os.Exit(1)
 			}
-			fmt.Println(err)
-			fmt.Fprintln(os.Stderr, "Can not read message.")
-			os.Exit(1)
+			clientChan <- b
+		}
+	}(clientMsg, ws)
+
+	// Handle messages from the channel
+	isFirst := true
+	for msg := range clientMsg {
+		var conn *websocket.Conn
+		// Init the connection to the docker serveice
+		if isFirst {
+			conn = InitDockerConnection(string(msg))
+			// Listen message from docker service and send to client connection
+			go func(cConn *websocket.Conn, sConn *websocket.Conn) {
+				defer sConn.Close()
+				defer cConn.Close()
+				for {
+					mType, msg, err := sConn.ReadMessage()
+					if err != nil {
+						fmt.Fprintln(os.Stderr, "Can not read message from connection")
+					}
+					cConn.WriteMessage(mType, msg)
+				}
+			}(ws, conn)
 		}
 
-		msg := string(b)
-		msgChannel := make(chan []byte, 10)
-		go HandleMessage(msg, msgChannel)
-		for msg := range msgChannel {
-			ws.WriteMessage(mType, msg)
-		}
-		// err = ws.WriteMessage(mType, b)
-		// if err != nil {
-		// 	if websocket.IsCloseError(err, websocket.CloseGoingAway) {
-		// 		fmt.Fprintln(os.Stderr, "Remote user closed the connection")
-		// 		ws.Close()
-		// 		break
-		// 	}
-		// 	fmt.Fprintln(os.Stderr, "Can not write message")
-		// 	os.Exit(1)
-		// }
+		// Send message to docker service
+		HandleMessage(msgType, msg, conn, isFirst)
+		isFirst = false
 	}
 }
