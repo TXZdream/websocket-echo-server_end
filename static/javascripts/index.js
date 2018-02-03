@@ -74,8 +74,12 @@ $(function () {
             term.write(data);
         });
     }
-    ws.close = function () {
-        console.log("close");
+    
+    function closeWebSocket() {  
+        ws.close();
+    }
+    window.onbeforeunload = function () {  
+           closeWebSocket();  
     }
     runFakeTerminal();
 });
