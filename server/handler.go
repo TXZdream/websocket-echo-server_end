@@ -32,9 +32,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				close(clientChan)
-				fmt.Println(err)
 				fmt.Fprintln(os.Stderr, "Can not read message.")
-				os.Exit(1)
+				return
 			}
 			clientChan <- b
 		}
@@ -47,14 +46,19 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		// Init the connection to the docker serveice
 		if isFirst {
 			conn = InitDockerConnection(string(msg))
+			if conn == nil {
+				fmt.Fprintf(os.Stderr, "Invalid command.")
+				ws.WriteMessage(msgType, []byte("Invalid Command"))
+				return
+			}
 			// Listen message from docker service and send to client connection
 			go func(cConn *websocket.Conn, sConn *websocket.Conn) {
 				defer sConn.Close()
-				defer cConn.Close()
 				for {
 					mType, msg, err := sConn.ReadMessage()
 					if err != nil {
 						fmt.Fprintln(os.Stderr, "Can not read message from connection")
+						return
 					}
 					cConn.WriteMessage(mType, msg)
 				}
@@ -65,4 +69,5 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		HandleMessage(msgType, msg, conn, isFirst)
 		isFirst = false
 	}
+	ws.Close()
 }
