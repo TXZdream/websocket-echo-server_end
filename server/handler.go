@@ -53,7 +53,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			// Listen message from docker service and send to client connection
 			go func(cConn *websocket.Conn, sConn *websocket.Conn) {
-				defer sConn.Close()
+				// defer sConn.Close()
 				for {
 					mType, msg, err := sConn.ReadMessage()
 					if err != nil {
@@ -69,5 +69,4 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		HandleMessage(msgType, msg, conn, isFirst)
 		isFirst = false
 	}
-	ws.Close()
 }
