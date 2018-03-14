@@ -3,78 +3,122 @@ HOST: http://polls.apiblueprint.org/
 
 # go-online
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+go-online is a simple online application which allows people code, run and test anywhere.
 
-## Questions Collection [/questions]
+## User Collection [/users]
 
-### List All Questions [GET]
+### Register new user [POST]
+
+You can create new user with some information.
+
++ Request (application/json)
+    
+        {
+            "username": "golang",
+            "email": "test@test.com",
+            "password": "password"
+        }
 
 + Response 200 (application/json)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ Request (application/json)
-
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
     + Headers
-
-            Location: /questions/2
-
+    
+            Location: /sessions/{userid}
+            
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
+                "error": false,
+                "msg": ""
+            }
+            
+### Get user information [GET]
+
+Get basic user information
+
++ Response 200 (application/json)
+
+        {
+            "error": false,
+            "msg": "",
+            "username": "golang",
+            "email": "test@test.com",
+        }
+
+## Session Collection [/sessions/{username}]
+
+### Sign in [POST]
+
+Users can sign in with some userful information.
+
++ Request (application/json)
+        
+        {
+            "username": "golang",
+            "email": "test@test.com"
+        }
+    
++ Response 200 (application/json)
+
+        {
+            "error": false,
+            "msg": "",
+            "token": "token field",
+            "expired_in": "3600"
+        }
+
++ Response 403 (application/json)
+
+        {
+            "error": true,
+            "msg": "invalid user message"
+        }
+    
+### Authenticate [GET]
+
++ Request
+
+    + Headers
+
+            token: Valid token
+            
++ Response 200 (application/json)
+
+        {
+            "error": false,
+            "msg": ""
+        }
+        
++ Response 401 (application/json)
+
+        {
+            "error": true,
+            "msg": "Invalid token or username."
+        }
+        
+## Project Collection [/projects]
+
+### Add project [POST]
+
+Add a new project
+
++ Request (application/json)
+
+    + Headers
+        
+            token: valid token
+        
+    + Body
+    
+            {
+                "username": "golang",
+                "project_name": "golang_test",
+                "type": 1
+            }
+
++ Response 200 (application/json)
+
+            {
+                "error": false,
+                "msg": ""
             }
