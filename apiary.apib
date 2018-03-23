@@ -122,3 +122,12 @@ Add a new project
                 "error": false,
                 "msg": ""
             }
+            
+## Command Collection [/ws]
+
+### Init a connection
+
+We should note that this collection uses ws to communicate with each other, so I can not show the IO with this document.
+In general, the front end init a ws connection with server, and there should include some validation message in there's header.
+All the message in a connection is a part of the initial command and once the connection was shutted down, it means the resources should be released.
+A user can use one command now, and he can use one connection , that is , one docker container at the same time.
