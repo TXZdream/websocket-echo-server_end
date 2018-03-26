@@ -4,7 +4,7 @@ import (
 	"os"
 
 	flag "github.com/spf13/pflag"
-	"github.com/txzdream/websocket-echo-server_end/server"
+	"github.com/txzdream/websocket-echo-server_end/core/controller"
 )
 
 func main() {
@@ -15,6 +15,6 @@ func main() {
 	var port = flag.StringP("port", "p", PORT, "Define the port where server runs")
 	flag.Parse()
 
-	s := server.GetServer()
+	s := controller.GetServer()
 	s.Run(":" + *port)
 }

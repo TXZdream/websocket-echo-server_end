@@ -1,4 +1,4 @@
-package server
+package controller
 
 // Command is the JSON format between web server and docker server
 type Command struct {

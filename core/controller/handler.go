@@ -1,4 +1,4 @@
-package server
+package controller
 
 import (
 	"fmt"
@@ -7,6 +7,8 @@ import (
 
 	"github.com/gorilla/websocket"
 )
+
+var upgrader = websocket.Upgrader{}
 
 // IndexHandler handle the index(/) uri with websocket
 func IndexHandler(w http.ResponseWriter, r *http.Request) {

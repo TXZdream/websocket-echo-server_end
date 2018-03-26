@@ -1,14 +1,11 @@
-package server
+package controller
 
 import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/websocket"
 	"github.com/urfave/negroni"
 )
-
-var upgrader = websocket.Upgrader{}
 
 // GetServer return web server
 func GetServer() *negroni.Negroni {
